@@ -8,7 +8,7 @@ def extract_vars(log_line):
 	if timeval:
 		responsetime = re.sub(r't=\'(\d+)ms\'',r"\1", timeval.group()) #TODO probably should do stripping for urlval in one step !!! Check if time other than "ms" is detected
 	else:
-		print "Warning: No response time found\n"
+		print ("Warning: No response time found\n")
 	urlval = re.search(r'url=(\'\/[\S]*\'\s)',log_line)
 	if urlval:
 		# TODO: Better to use capturing group and backreference but avoiding unnecessary dict lookups for now
@@ -17,7 +17,7 @@ def extract_vars(log_line):
 		endpoint = re.sub(r'url=\'',"",endpoint) #Strip front
 		endpoint = re.sub(r"\'\s","",endpoint)   #Strip end + whitespace
 	else:
-		print "Warning: No endpoint found\n"
+		print ("Warning: No endpoint found\n")
         return endpoint, responsetime
 
 # A simple argument parser, to make sure it gracefully handles wrong input
