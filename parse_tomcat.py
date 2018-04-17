@@ -9,7 +9,7 @@ def extract_vars(log_line):
 # dict.has_key(key)
 	timeval = re.search(r't=(\'[0-9]*)ms\'',log_line)
 	if timeval:
-		responsetime = re.sub(r't=\'(\w+)\'',r"\1", timeval.group()) #TODO probably should do stripping for urlval in one step
+		responsetime = re.sub(r't=\'(\d+)ms\'',r"\1", timeval.group()) #TODO probably should do stripping for urlval in one step !!! Check if time other than "ms" is detected
 		#print responsetime
 	else:
 		print "Warning: No response time found\n"
@@ -31,10 +31,20 @@ args = parser.parse_args()
 #print args.filename
 #TODO check if it's a tomcat log file or some other stuff
 
+log_stats = {} #empty dictionary for population in the loop
+
 log_file = open(args.filename,"r")
 for line in log_file:
         if "Request to url" in line:
-                print line
+                #print line
                 variables = extract_vars(line)
-		print variables
+		if variables[0] in log_stats:
+			#update counters
+			log_stats[variables[0]] = [log_stats[variables[0]][0]+1,log_stats[variables[0]][1]+int(variables[1])]
+		else:
+			log_stats[variables[0]] = [1,int(variables[1])] # new endpoint with counter and response time
+print "Printing Log Stats\n"
+print ("Endpoint", "No. of Inovations", "Avg. Response Time")
+for item in log_stats:
+	print (item, log_stats[item][0],float(log_stats[item][1]/log_stats[item][0])) # total response time / no of invocations
 log_file.close()
