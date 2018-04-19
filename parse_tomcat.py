@@ -3,14 +3,13 @@
 import sys
 import argparse
 import re
-import tabulate
 
 def extract_vars(log_line):
     timeval = re.search(r't=(\'[0-9]*)ms\'', log_line)
     if timeval:
         responsetime = re.sub(r't=\'(\d+)ms\'', r"\1", timeval.group())  # TODO probably should do stripping for urlval in one step !!! Check if time other than "ms" is detected
     else:
-        print 'Warning: No response time found\n'
+        print ('Warning: No response time found\n')
     urlval = re.search(r'url=(\'\/[\S]*\'\s)', log_line)
     if urlval:
 
@@ -24,7 +23,8 @@ def extract_vars(log_line):
         endpoint = re.sub(r'url=\'', '', endpoint)  # Strip front
         endpoint = re.sub(r"\'\s", '', endpoint)  # Strip end + whitespace
     else:
-        print 'Warning: No endpoint found\n'
+
+        print('Warning: No endpoint found\n')
     return (endpoint, responsetime)
 
 
